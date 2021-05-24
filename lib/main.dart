@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,13 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      home: MyHomePage(title: 'Guess the number'),
+      home: const MyHomePage(title: 'Guess the number'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -30,58 +32,59 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _max_value = 20;
-  Random _gen;
-  int _secret_number = 0;
-  int _guessed_number;
 
   _MyHomePageState() {
-    _gen = new Random(DateTime
+    _gen = Random(DateTime
         .now()
         .millisecondsSinceEpoch);
-    _random_secret();
+    _randomSecret();
   }
 
-  void _random_secret() {
+  late Random? _gen;
+  int _maxValue = 20;
+  int _secretNumber = 0;
+  int _guessedNumber = -1;
+
+  void _randomSecret() {
     setState(() {
-      _secret_number = _gen.nextInt(_max_value) + 1;
+      _secretNumber = _gen!.nextInt(_maxValue) + 1;
     });
   }
 
   void _onChangeGuessedNumber(String value) {
-    var guess = int.tryParse(value);
+    final int? guess = int.tryParse(value);
     if (guess != null) {
       setState(() {
-        _guessed_number = guess;
+        _guessedNumber = guess;
       });
     }
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-    if (_guessed_number == _secret_number) {
-      var prev_secret_number = _secret_number;
+    if (_guessedNumber == _secretNumber) {
+      final int prevSecretNumber = _secretNumber;
       setState(() {
-        _max_value *= 2;
+        _maxValue *= 2;
       });
-      _random_secret();
-      return new AlertDialog(
-        title: new Text("You guessed it!"),
-        content: new Text("The number what indeed $prev_secret_number. Now try again, but a bit harder!"),
+      _randomSecret();
+      return AlertDialog(
+        title: const Text('You guessed it!'),
+        content: Text('The number what indeed $prevSecretNumber. Now try again, but a bit harder!'),
       );
-    } else if (_guessed_number == null) {
-      return new AlertDialog(
-        title: new Text("Invalid number"),
-        content: new Text("You have to provide a number in the input field before guessing!"),
+    } else if (_guessedNumber == null) {
+      return const AlertDialog(
+        title: Text('Invalid number'),
+        content: Text('You have to provide a number in the input field before guessing!'),
       );
-    } else if (_guessed_number > _secret_number) {
-      return new AlertDialog(
-        title: new Text("Not quite so!"),
-        content: new Text("Try a bit lower."),
+    } else if (_guessedNumber > _secretNumber) {
+      return const AlertDialog(
+        title: Text('Not quite so!'),
+        content: Text('Try a bit lower.'),
       );
     } else {
-      return new AlertDialog(
-        title: new Text("Not quite so!"),
-        content: new Text("Try a bit higher."),
+      return const AlertDialog(
+        title: Text('Not quite so!'),
+        content: Text('Try a bit higher.'),
       );
     }
   }
@@ -99,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Try to guess my secret number (1 - $_max_value)',
+                'Try to guess my secret number (1 - $_maxValue)',
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
@@ -109,13 +112,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               TextButton.icon(
-                  label: Text("Reset"),
-                  icon: Icon(Icons.refresh),
+                  label: const Text('Reset'),
+                  icon: const Icon(Icons.refresh),
                   onPressed: () {
                     setState(() {
-                      _max_value = 20;
+                      _maxValue = 20;
                     });
-                    _random_secret();
+                    _randomSecret();
                   },
               ),
             ],
@@ -124,13 +127,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
+          showDialog<AlertDialog>(
               context: context,
               builder: (BuildContext context) => _buildPopupDialog(context)
           );
         },
         tooltip: 'Guess',
-        child: Icon(Icons.auto_awesome),
+        child: const Icon(Icons.auto_awesome),
       ),
     );
   }
