@@ -8,7 +8,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -32,11 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   _MyHomePageState() {
-    _gen = Random(DateTime
-        .now()
-        .millisecondsSinceEpoch);
+    _gen = Random(DateTime.now().millisecondsSinceEpoch);
     _randomSecret();
   }
 
@@ -112,14 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               TextButton.icon(
-                  label: const Text('Reset'),
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () {
-                    setState(() {
-                      _maxValue = 20;
-                    });
-                    _randomSecret();
-                  },
+                label: const Text('Reset'),
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  setState(() {
+                    _maxValue = 20;
+                  });
+                  _randomSecret();
+                },
               ),
             ],
           ),
@@ -127,10 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog<AlertDialog>(
-              context: context,
-              builder: (BuildContext context) => _buildPopupDialog(context)
-          );
+          showDialog<AlertDialog>(context: context, builder: (BuildContext context) => _buildPopupDialog(context));
         },
         tooltip: 'Guess',
         child: const Icon(Icons.auto_awesome),
